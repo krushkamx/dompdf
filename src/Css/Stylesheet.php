@@ -171,7 +171,12 @@ class Stylesheet
         $this->setFontMetrics($dompdf->getFontMetrics());
         $this->_styles = array();
         $this->_loaded_files = array();
+
+        // Added to fix missing $_SERVER when CRON job is run by supervisor
+        // Source: https://stackoverflow.com/questions/34536344/mail-queue-and-dompdf-job-works-perfectly-on-homestead-but-not-on-my-production
+        if (!isset($_SERVER["SCRIPT_FILENAME"])) $_SERVER["SCRIPT_FILENAME"] = "";
         list($this->_protocol, $this->_base_host, $this->_base_path) = Helpers::explode_url($_SERVER["SCRIPT_FILENAME"]);
+        
         $this->_page_styles = array("base" => null);
     }
 
